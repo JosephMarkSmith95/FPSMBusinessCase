@@ -15,17 +15,16 @@ import {
   VerticalAlign,
   LevelFormat,
   PageNumber,
-  NumberFormat,
   UnderlineType,
   PageBreak,
 } from "docx";
-
+ 
 export interface StrategicObjective {
   label: string;
   checked: boolean;
   explanation: string;
 }
-
+ 
 export interface BusinessCaseData {
   caseName: string;
   caseOwner: string;
@@ -36,7 +35,7 @@ export interface BusinessCaseData {
   expectedOutcomes: string;
   objectives: StrategicObjective[];
 }
-
+ 
 // ─── Colour palette matching FPSM template ───────────────────────────────────
 const BRAND_BLUE = "1F3864";
 const ACCENT_BLUE = "2E5FA3";
@@ -46,18 +45,18 @@ const DARK_GREY = "3A3A3A";
 const WHITE = "FFFFFF";
 const BORDER_GREY = "CCCCCC";
 const LEVEL_ORANGE = "C55A11";
-
+ 
 // ─── Border helpers ───────────────────────────────────────────────────────────
 const thinBorder = { style: BorderStyle.SINGLE, size: 1, color: BORDER_GREY };
 const allBorders = { top: thinBorder, bottom: thinBorder, left: thinBorder, right: thinBorder };
 const noBorder = { style: BorderStyle.NONE, size: 0, color: "FFFFFF" };
 const noBorders = { top: noBorder, bottom: noBorder, left: noBorder, right: noBorder };
-
+ 
 // ─── Spacing helper ───────────────────────────────────────────────────────────
 function spacer(pts = 6): Paragraph {
   return new Paragraph({ spacing: { before: 0, after: pts * 20 } });
 }
-
+ 
 // ─── Bullet list helper ───────────────────────────────────────────────────────
 function bulletParagraphs(text: string): Paragraph[] {
   return text
@@ -73,7 +72,7 @@ function bulletParagraphs(text: string): Paragraph[] {
         })
     );
 }
-
+ 
 // ─── Section heading ─────────────────────────────────────────────────────────
 function sectionHeading(text: string): Paragraph {
   return new Paragraph({
@@ -85,7 +84,7 @@ function sectionHeading(text: string): Paragraph {
     },
   });
 }
-
+ 
 // ─── Level divider (matches "--- Level X ---" style) ─────────────────────────
 function levelDivider(text: string): Paragraph {
   return new Paragraph({
@@ -107,7 +106,7 @@ function levelDivider(text: string): Paragraph {
     },
   });
 }
-
+ 
 // ─── Title block ─────────────────────────────────────────────────────────────
 function titleBlock(caseName: string, caseOwner: string): Paragraph[] {
   return [
@@ -148,7 +147,7 @@ function titleBlock(caseName: string, caseOwner: string): Paragraph[] {
     }),
   ];
 }
-
+ 
 // ─── Strategic objectives table ───────────────────────────────────────────────
 function objectivesTable(objectives: StrategicObjective[]): Table {
   const headerRow = new TableRow({
@@ -191,7 +190,7 @@ function objectivesTable(objectives: StrategicObjective[]): Table {
       }),
     ],
   });
-
+ 
   const dataRows = objectives.map(
     (obj, i) =>
       new TableRow({
@@ -250,14 +249,14 @@ function objectivesTable(objectives: StrategicObjective[]): Table {
         ],
       })
   );
-
+ 
   return new Table({
     width: { size: 9360, type: WidthType.DXA },
     columnWidths: [4200, 800, 4360],
     rows: [headerRow, ...dataRows],
   });
 }
-
+ 
 // ─── Value proposition callout box ───────────────────────────────────────────
 function valuePropositionBox(text: string): Table {
   return new Table({
@@ -308,7 +307,7 @@ function valuePropositionBox(text: string): Table {
     ],
   });
 }
-
+ 
 // ─── Main document builder ───────────────────────────────────────────────────
 export async function generateBusinessCase(data: BusinessCaseData): Promise<Blob> {
   const doc = new Document({
@@ -363,8 +362,6 @@ export async function generateBusinessCase(data: BusinessCaseData): Promise<Blob
             size: { width: 11906, height: 16838 }, // A4
             margin: { top: 1134, right: 1134, bottom: 1134, left: 1134 }, // ~2cm margins
           },
-          pageNumberStart: 1,
-          pageNumberFormatType: NumberFormat.DECIMAL,
         },
         headers: {
           default: new Header({
@@ -434,20 +431,20 @@ export async function generateBusinessCase(data: BusinessCaseData): Promise<Blob
         children: [
           // Title
           ...titleBlock(data.caseName, data.caseOwner),
-
+ 
           // ── LEVEL 1 ──────────────────────────────────────────────────────
           levelDivider("─── Level 1 ───"),
-
+ 
           // Executive Summary
           sectionHeading("Executive Summary"),
           ...bulletParagraphs(data.execSummary),
           spacer(8),
-
+ 
           // Strategic Rationale
           sectionHeading("Strategic Rationale"),
           ...bulletParagraphs(data.strategicRationale),
           spacer(8),
-
+ 
           // Strategic Alignment table
           new Paragraph({
             children: [
@@ -463,25 +460,25 @@ export async function generateBusinessCase(data: BusinessCaseData): Promise<Blob
           }),
           objectivesTable(data.objectives),
           spacer(12),
-
+ 
           // Objective
           sectionHeading("Objective"),
           ...bulletParagraphs(data.objective),
           spacer(8),
-
+ 
           // Value Proposition
           sectionHeading("Value Proposition"),
           valuePropositionBox(data.valueProposition),
           spacer(12),
-
+ 
           // Expected Outcomes
           sectionHeading("Expected Outcomes"),
           ...bulletParagraphs(data.expectedOutcomes),
           spacer(8),
-
+ 
           // ── LEVEL 2 & 3 placeholder ──────────────────────────────────────
           levelDivider("─── Level 2 and 3 ───"),
-
+ 
           new Paragraph({
             children: [
               new TextRun({
@@ -495,10 +492,10 @@ export async function generateBusinessCase(data: BusinessCaseData): Promise<Blob
             alignment: AlignmentType.CENTER,
             spacing: { before: 120, after: 240 },
           }),
-
+ 
           // ── FINAL ADDITIONS placeholder ───────────────────────────────────
           levelDivider("─── Final Additions ───"),
-
+ 
           new Paragraph({
             children: [
               new TextRun({
@@ -512,7 +509,7 @@ export async function generateBusinessCase(data: BusinessCaseData): Promise<Blob
             alignment: AlignmentType.CENTER,
             spacing: { before: 120, after: 240 },
           }),
-
+ 
           // Status Log table placeholder
           spacer(16),
           new Paragraph({
@@ -589,7 +586,6 @@ export async function generateBusinessCase(data: BusinessCaseData): Promise<Blob
       },
     ],
   });
-
+ 
   const buffer = await Packer.toBlob(doc);
   return buffer;
-}
