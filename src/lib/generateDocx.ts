@@ -15,7 +15,6 @@ import {
   VerticalAlign,
   LevelFormat,
   PageNumber,
-  NumberFormat,
   UnderlineType,
   PageBreak,
 } from "docx";
@@ -363,8 +362,6 @@ export async function generateBusinessCase(data: BusinessCaseData): Promise<Blob
             size: { width: 11906, height: 16838 }, // A4
             margin: { top: 1134, right: 1134, bottom: 1134, left: 1134 }, // ~2cm margins
           },
-          pageNumberStart: 1,
-          pageNumberFormatType: NumberFormat.DECIMAL,
         },
         headers: {
           default: new Header({
