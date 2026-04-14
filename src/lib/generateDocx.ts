@@ -588,4 +588,4 @@ export async function generateBusinessCase(data: BusinessCaseData): Promise<Blob
   });
  
   const buffer = await Packer.toBlob(doc);
-  return buffer;
+  return buffer;}
